@@ -5,7 +5,7 @@ const qtdItemInput = document.getElementById('input-quantidade');
 
 const btnCadastro = document.getElementById('btn-cadastrar');
 
-const listaEstoque = document.getElementById('lista-estoque');
+const listaEstoque = document.getElementById('lista-materiais');
 
 btnCadastro.addEventListener('click', function() {
     const nomeItem = nomeItemInput.value;
@@ -13,7 +13,7 @@ btnCadastro.addEventListener('click', function() {
 
     
     if (!nomeItem || isNaN(qtdItem)) {
-        alert("Preencha todos os campos corretamente!");
+        alert("Preencha todos os campos");
         return;
     }
 
@@ -32,13 +32,36 @@ btnCadastro.addEventListener('click', function() {
     })
     .then(resposta => resposta.json())
     .then(dadosSalvos => {
-        console.log("Item cadastrado com sucesso:", dadosSalvos);
+        
         
         
         qtdItemInput.value = "";
         nomeItemInput.value = "";
 
-        atualizarTelaAlmoxarifado();
+        renderizarItens();
     })
     .catch(erro => console.error("Erro ao cadastrar:", erro));
 });
+
+function renderizarItens() {
+    fetch(URL_API)
+        .then(resposta => resposta.json())
+        .then(itensDaAPI => {
+          
+            listaEstoque.innerHTML = "";
+
+           
+            itensDaAPI.forEach(item => {
+                const novaLinha = document.createElement('li');
+                
+              
+                novaLinha.innerText = `Item: ${item.nome} || Quantidade: ${item.quantidade}`;
+               
+                listaEstoque.appendChild(novaLinha);
+            });
+        })
+        .catch(erro => {
+            console.error("Erro ao buscar os dados da API:", erro);
+        });
+}
+renderizarItens();
