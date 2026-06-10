@@ -35,8 +35,8 @@ btnCadastro.addEventListener('click', function() {
         console.log("Item cadastrado com sucesso:", dadosSalvos);
         
         
-        inputNome.value = "";
-        inputQtd.value = "";
+        qtdItemInput.value = "";
+        nomeItemInput.value = "";
 
         atualizarTelaAlmoxarifado();
     })
