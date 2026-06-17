@@ -88,27 +88,89 @@ function renderizarItens() {
                 const baixaBotao = document.createElement('button');
 
                 baixaBotao.className = 'btn-baixar'
-                baixaBotao.textContent = 'Dar baixa';
+                baixaBotao.textContent = 'Baixa';
+
 
 
                 baixaBotao.addEventListener('click', () => {
                     const qtdBaixa = parseInt(inputBaixa.value);
 
-                    
+
                     const validacao = validarRetirada(item.quantidade, qtdBaixa);
 
-                    
+
                     if (!validacao.valido) {
                         alert(validacao.mensagem);
                         return;
                     }
+                    const dadoAtualizado = {
+                        quantidade: validacao.novoEstoque
+                    };
+
+
+                    fetch(`${URL_API}/${item.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dadoAtualizado)
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            console.log("Estoque atualizado!");
+                            renderizarItens();
+                        })
+                        .catch(err => console.error("Erro no PUT:", err));
                 });
+
+
+                const aporteBotao = document.createElement('button');
+
+                aporteBotao.className = 'btn-aporte'
+                aporteBotao.textContent = 'Aporte';
+
+
+
+                aporteBotao.addEventListener('click', () => {
+                    const qtdBaixa = parseInt(inputBaixa.value);
+
+
+                    
+
+                    if (isNaN(qtdBaixa) || qtdBaixa <= 0) {
+                        
+                          alert("Por favor, digite uma quantidade válida para aporte.");
+                          return;
+                        
+                    }
+
+                    const dadoAtualizado = {
+                        quantidade: item.quantidade + qtdBaixa
+                    };
+
+
+                    fetch(`${URL_API}/${item.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dadoAtualizado)
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            console.log("Estoque atualizado!");
+                            renderizarItens();
+                        })
+                        .catch(err => console.error("Erro no PUT:", err));
+                });
+
 
 
 
 
                 novaLinha.appendChild(inputBaixa);
                 novaLinha.appendChild(baixaBotao);
+                novaLinha.appendChild(aporteBotao);
                 listaEstoque.appendChild(novaLinha);
             });
         })
