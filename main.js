@@ -57,6 +57,11 @@ function renderizarItens() {
 
                 novaLinha.innerText = `Item: ${item.nome} || Quantidade: ${item.quantidade}`;
 
+                
+                const inputBaixa = document.createElement('input');
+                inputBaixa.className = 'input-retirada'
+
+
                 const baixaBotao = document.createElement('button');
 
                 baixaBotao.className = 'btn-baixar'
@@ -64,10 +69,18 @@ function renderizarItens() {
 
             
                 baixaBotao.addEventListener('click', () => {
-                    alert('Botão clicado!');
+                   const qtdBaixa = parseInt(inputBaixa.value);
+                        if (item.quantidade < qtdBaixa) {
+                            alert("quantidade invalida");
+                            return;
+                        }
+
                 });
 
-               
+
+
+
+                novaLinha.appendChild(inputBaixa);
                 novaLinha.appendChild(baixaBotao);
                 listaEstoque.appendChild(novaLinha);
             });
