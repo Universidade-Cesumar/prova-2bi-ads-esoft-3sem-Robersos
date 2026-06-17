@@ -162,15 +162,15 @@ function renderizarItens() {
                 botaoExcluir.className = "btn-excluir";
                 botaoExcluir.addEventListener('click', () => {
 
-        
+
 
                     fetch(`${URL_API}/${item.id}`, {
-                        method: 'DELETE' 
+                        method: 'DELETE'
                     })
                         .then(resposta => {
                             if (resposta.ok) {
                                 console.log("Item deletado com sucesso!");
-                                renderizarItens(); 
+                                renderizarItens();
                             }
                         })
                         .catch(erro => console.error("Erro ao deletar:", erro));
@@ -179,10 +179,14 @@ function renderizarItens() {
                 });
 
 
-                novaLinha.appendChild(inputBaixa);
-                novaLinha.appendChild(baixaBotao);
-                novaLinha.appendChild(aporteBotao);
-                novaLinha.appendChild(botaoExcluir);
+                const botoesContainer = document.createElement('div');
+                botoesContainer.className = 'controles-container';
+                
+                botoesContainer.appendChild(inputBaixa);
+                botoesContainer.appendChild(baixaBotao);
+                botoesContainer.appendChild(aporteBotao);
+                botoesContainer.appendChild(botaoExcluir);
+                novaLinha.appendChild(botoesContainer);
                 listaEstoque.appendChild(novaLinha);
             });
         })
