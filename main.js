@@ -7,11 +7,11 @@ const btnCadastro = document.getElementById('btn-cadastrar');
 
 const listaEstoque = document.getElementById('lista-materiais');
 
-btnCadastro.addEventListener('click', function() {
+btnCadastro.addEventListener('click', function () {
     const nomeItem = nomeItemInput.value;
     const qtdItem = parseInt(qtdItemInput.value);
 
-    
+
     if (!nomeItem || isNaN(qtdItem)) {
         alert("Preencha todos os campos");
         return;
@@ -22,7 +22,7 @@ btnCadastro.addEventListener('click', function() {
         quantidade: qtdItem
     };
 
-  
+
     fetch(URL_API, {
         method: 'POST',
         headers: {
@@ -30,33 +30,45 @@ btnCadastro.addEventListener('click', function() {
         },
         body: JSON.stringify(novoProduto)
     })
-    .then(resposta => resposta.json())
-    .then(dadosSalvos => {
-        
-        
-        
-        qtdItemInput.value = "";
-        nomeItemInput.value = "";
+        .then(resposta => resposta.json())
+        .then(dadosSalvos => {
 
-        renderizarItens();
-    })
-    .catch(erro => console.error("Erro ao cadastrar:", erro));
+
+
+            qtdItemInput.value = "";
+            nomeItemInput.value = "";
+
+            renderizarItens();
+        })
+        .catch(erro => console.error("Erro ao cadastrar:", erro));
 });
 
 function renderizarItens() {
     fetch(URL_API)
         .then(resposta => resposta.json())
         .then(itensDaAPI => {
-          
+
             listaEstoque.innerHTML = "";
 
-           
+
             itensDaAPI.forEach(item => {
                 const novaLinha = document.createElement('li');
-                
-              
+
+
                 novaLinha.innerText = `Item: ${item.nome} || Quantidade: ${item.quantidade}`;
+
+                const baixaBotao = document.createElement('button');
+
+                baixaBotao.className = 'btn-baixar'
+                baixaBotao.textContent = 'Dar baixa';
+
+            
+                baixaBotao.addEventListener('click', () => {
+                    alert('Botão clicado!');
+                });
+
                
+                novaLinha.appendChild(baixaBotao);
                 listaEstoque.appendChild(novaLinha);
             });
         })
