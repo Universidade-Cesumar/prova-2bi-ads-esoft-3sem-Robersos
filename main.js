@@ -43,6 +43,29 @@ btnCadastro.addEventListener('click', function () {
         .catch(erro => console.error("Erro ao cadastrar:", erro));
 });
 
+function validarRetirada(estoqueAtual, quantidadeRetirada) {
+
+    if (isNaN(quantidadeRetirada) || quantidadeRetirada <= 0) {
+        return {
+            valido: false,
+            mensagem: "Por favor, digite uma quantidade válida para retirada."
+        };
+    }
+
+    if (estoqueAtual < quantidadeRetirada) {
+        return {
+            valido: false,
+            mensagem: `Quantidade insuficiente! Estoque atual: ${estoqueAtual} unidades.`
+        };
+    }
+
+
+    return {
+        valido: true,
+        novoEstoque: estoqueAtual - quantidadeRetirada
+    };
+}
+
 function renderizarItens() {
     fetch(URL_API)
         .then(resposta => resposta.json())
@@ -57,7 +80,7 @@ function renderizarItens() {
 
                 novaLinha.innerText = `Item: ${item.nome} || Quantidade: ${item.quantidade}`;
 
-                
+
                 const inputBaixa = document.createElement('input');
                 inputBaixa.className = 'input-retirada'
 
@@ -67,14 +90,18 @@ function renderizarItens() {
                 baixaBotao.className = 'btn-baixar'
                 baixaBotao.textContent = 'Dar baixa';
 
-            
-                baixaBotao.addEventListener('click', () => {
-                   const qtdBaixa = parseInt(inputBaixa.value);
-                        if (item.quantidade < qtdBaixa) {
-                            alert("quantidade invalida");
-                            return;
-                        }
 
+                baixaBotao.addEventListener('click', () => {
+                    const qtdBaixa = parseInt(inputBaixa.value);
+
+                    
+                    const validacao = validarRetirada(item.quantidade, qtdBaixa);
+
+                    
+                    if (!validacao.valido) {
+                        alert(validacao.mensagem);
+                        return;
+                    }
                 });
 
 
