@@ -86,12 +86,8 @@ function renderizarItens() {
 
 
                 const baixaBotao = document.createElement('button');
-
                 baixaBotao.className = 'btn-baixar'
                 baixaBotao.textContent = 'Baixa';
-
-
-
                 baixaBotao.addEventListener('click', () => {
                     const qtdBaixa = parseInt(inputBaixa.value);
 
@@ -125,23 +121,19 @@ function renderizarItens() {
 
 
                 const aporteBotao = document.createElement('button');
-
                 aporteBotao.className = 'btn-aporte'
                 aporteBotao.textContent = 'Aporte';
-
-
-
                 aporteBotao.addEventListener('click', () => {
                     const qtdBaixa = parseInt(inputBaixa.value);
 
 
-                    
+
 
                     if (isNaN(qtdBaixa) || qtdBaixa <= 0) {
-                        
-                          alert("Por favor, digite uma quantidade válida para aporte.");
-                          return;
-                        
+
+                        alert("Por favor, digite uma quantidade válida para aporte.");
+                        return;
+
                     }
 
                     const dadoAtualizado = {
@@ -165,12 +157,32 @@ function renderizarItens() {
                 });
 
 
+                const botaoExcluir = document.createElement('button');
+                botaoExcluir.textContent = "Excluir";
+                botaoExcluir.className = "btn-excluir";
+                botaoExcluir.addEventListener('click', () => {
 
+        
+
+                    fetch(`${URL_API}/${item.id}`, {
+                        method: 'DELETE' 
+                    })
+                        .then(resposta => {
+                            if (resposta.ok) {
+                                console.log("Item deletado com sucesso!");
+                                renderizarItens(); 
+                            }
+                        })
+                        .catch(erro => console.error("Erro ao deletar:", erro));
+
+
+                });
 
 
                 novaLinha.appendChild(inputBaixa);
                 novaLinha.appendChild(baixaBotao);
                 novaLinha.appendChild(aporteBotao);
+                novaLinha.appendChild(botaoExcluir);
                 listaEstoque.appendChild(novaLinha);
             });
         })
