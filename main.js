@@ -7,6 +7,8 @@ const btnCadastro = document.getElementById('btn-cadastrar');
 
 const listaEstoque = document.getElementById('lista-materiais');
 
+const inputMovimentacao = document.getElementById('input-retirada');
+
 btnCadastro.addEventListener('click', function () {
     const nomeItem = nomeItemInput.value;
     const qtdItem = parseInt(qtdItemInput.value);
@@ -44,26 +46,15 @@ btnCadastro.addEventListener('click', function () {
 });
 
 function validarRetirada(estoqueAtual, quantidadeRetirada) {
-
     if (isNaN(quantidadeRetirada) || quantidadeRetirada <= 0) {
-        return {
-            valido: false,
-            mensagem: "Por favor, digite uma quantidade válida para retirada."
-        };
+        return false;
     }
 
-    if (estoqueAtual < quantidadeRetirada) {
-        return {
-            valido: false,
-            mensagem: `Quantidade insuficiente! Estoque atual: ${estoqueAtual} unidades.`
-        };
+    if (quantidadeRetirada > estoqueAtual) {
+        return false;
     }
 
-
-    return {
-        valido: true,
-        novoEstoque: estoqueAtual - quantidadeRetirada
-    };
+    return true;
 }
 
 function renderizarItens() {
@@ -81,79 +72,58 @@ function renderizarItens() {
                 novaLinha.innerText = `Item: ${item.nome} || Quantidade: ${item.quantidade}`;
 
 
-                const inputBaixa = document.createElement('input');
-                inputBaixa.className = 'input-retirada'
 
 
                 const baixaBotao = document.createElement('button');
-                baixaBotao.className = 'btn-baixar'
+                baixaBotao.className = 'btn-baixar';
                 baixaBotao.textContent = 'Baixa';
+
                 baixaBotao.addEventListener('click', () => {
-                    const qtdBaixa = parseInt(inputBaixa.value);
+                    const qtdBaixa = parseInt(inputMovimentacao.value);
 
-
-                    const validacao = validarRetirada(item.quantidade, qtdBaixa);
-
-
-                    if (!validacao.valido) {
-                        alert(validacao.mensagem);
+                    if (!validarRetirada(item.quantidade, qtdBaixa)) {
+                        alert("Quantidade inválida ou insuficiente para retirada!");
                         return;
                     }
-                    const dadoAtualizado = {
-                        quantidade: validacao.novoEstoque
-                    };
 
+                    const dadoAtualizado = { quantidade: item.quantidade - qtdBaixa };
 
                     fetch(`${URL_API}/${item.id}`, {
                         method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(dadoAtualizado)
                     })
                         .then(res => res.json())
                         .then(() => {
-                            console.log("Estoque atualizado!");
+                            inputMovimentacao.value = "";
                             renderizarItens();
-                        })
-                        .catch(err => console.error("Erro no PUT:", err));
+                        });
                 });
 
-
                 const aporteBotao = document.createElement('button');
-                aporteBotao.className = 'btn-aporte'
+                aporteBotao.className = 'btn-aporte';
                 aporteBotao.textContent = 'Aporte';
+
                 aporteBotao.addEventListener('click', () => {
-                    const qtdBaixa = parseInt(inputBaixa.value);
+                    const qtdAporte = parseInt(inputMovimentacao.value);
 
-
-
-
-                    if (isNaN(qtdBaixa) || qtdBaixa <= 0) {
-
-                        alert("Por favor, digite uma quantidade válida para aporte.");
+                    if (isNaN(qtdAporte) || qtdAporte <= 0) {
+                        alert("Digite uma quantidade válida para o aporte!");
                         return;
-
                     }
 
-                    const dadoAtualizado = {
-                        quantidade: item.quantidade + qtdBaixa
-                    };
-
+                    const dadoAtualizado = { quantidade: item.quantidade + qtdAporte };
 
                     fetch(`${URL_API}/${item.id}`, {
                         method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(dadoAtualizado)
                     })
                         .then(res => res.json())
                         .then(() => {
-                            console.log("Estoque atualizado!");
+                            inputMovimentacao.value = "";
                             renderizarItens();
-                        })
-                        .catch(err => console.error("Erro no PUT:", err));
+                        });
                 });
 
 
@@ -181,8 +151,8 @@ function renderizarItens() {
 
                 const botoesContainer = document.createElement('div');
                 botoesContainer.className = 'controles-container';
-                
-                botoesContainer.appendChild(inputBaixa);
+
+
                 botoesContainer.appendChild(baixaBotao);
                 botoesContainer.appendChild(aporteBotao);
                 botoesContainer.appendChild(botaoExcluir);
