@@ -166,4 +166,6 @@ function renderizarItens() {
             console.error("Erro ao buscar os dados da API:", erro);
         });
 }
-renderizarItens();
+window.onload = function() {
+    renderizarItens();
+};
