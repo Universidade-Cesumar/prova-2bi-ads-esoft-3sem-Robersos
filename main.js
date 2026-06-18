@@ -9,6 +9,18 @@ const listaEstoque = document.getElementById('lista-materiais');
 
 const inputMovimentacao = document.getElementById('input-retirada');
 
+function validarRetirada(estoqueAtual, quantidadeRetirada) {
+    if (isNaN(quantidadeRetirada) || quantidadeRetirada <= 0) {
+        return false;
+    }
+
+    if (quantidadeRetirada > estoqueAtual) {
+        return false;
+    }
+
+    return true;
+}
+
 btnCadastro.addEventListener('click', function () {
     const nomeItem = nomeItemInput.value;
     const qtdItem = parseInt(qtdItemInput.value);
@@ -45,17 +57,7 @@ btnCadastro.addEventListener('click', function () {
         .catch(erro => console.error("Erro ao cadastrar:", erro));
 });
 
-function validarRetirada(estoqueAtual, quantidadeRetirada) {
-    if (isNaN(quantidadeRetirada) || quantidadeRetirada <= 0) {
-        return false;
-    }
 
-    if (quantidadeRetirada > estoqueAtual) {
-        return false;
-    }
-
-    return true;
-}
 
 function renderizarItens() {
     fetch(URL_API)
