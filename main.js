@@ -65,6 +65,12 @@ function renderizarItens() {
         .then(itensDaAPI => {
 
             listaEstoque.innerHTML = "";
+            
+            const totalItensElemento = document.getElementById('total-itens');
+
+            if (totalItensElemento) {
+                totalItensElemento.textContent = itensDaAPI.length;
+            }
 
 
             itensDaAPI.forEach(item => {
@@ -166,6 +172,6 @@ function renderizarItens() {
             console.error("Erro ao buscar os dados da API:", erro);
         });
 }
-window.onload = function() {
+window.onload = function () {
     renderizarItens();
 };
