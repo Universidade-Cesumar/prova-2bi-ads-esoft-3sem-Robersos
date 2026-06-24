@@ -10,7 +10,7 @@ Projeto prático de um sistema de controle de estoque e suprimentos hospitalares
 ---
 
 ## 🚀 Link do Projeto no Ar
-* **Link da Aplicação:** [INSIRA_AQUI_O_LINK_DO_SEU_GITHUB_PAGES_OU_VERCEL]
+* **Link da Aplicação:** [https://universidade-cesumar.github.io/prova-2bi-ads-esoft-3sem-Robersos/]
 
 ---
 
