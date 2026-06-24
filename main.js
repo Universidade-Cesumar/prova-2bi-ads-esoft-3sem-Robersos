@@ -21,7 +21,7 @@ function validarRetirada(estoqueAtual, quantidadeRetirada) {
     return true;
 }
 
-btnCadastro.addEventListener('click', function () {
+btnCadastro.addEventListener('click', async function () {
     const nomeItem = nomeItemInput.value;
     const qtdItem = parseInt(qtdItemInput.value);
 
@@ -37,24 +37,27 @@ btnCadastro.addEventListener('click', function () {
     };
 
 
-    fetch(URL_API, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(novoProduto)
-    })
-        .then(resposta => resposta.json())
-        .then(dadosSalvos => {
+   try {
+        const resposta = await fetch(URL_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novoProduto)
+        });
 
+        if (!resposta.ok) {
+            throw new Error("Não foi possível salvar o produto.");
+        }
 
+    
+        qtdItemInput.value = "";
+        nomeItemInput.value = "";
+        renderizarItens();
 
-            qtdItemInput.value = "";
-            nomeItemInput.value = "";
-
-            renderizarItens();
-        })
-        .catch(erro => console.error("Erro ao cadastrar:", erro));
+    } catch (erro) {
+        
+        console.error("Erro ao cadastrar:", erro);
+        alert("Erro ao conectar com o servidor. Tente novamente mais tarde.");
+    }
 });
 
 
@@ -78,6 +81,10 @@ function renderizarItens() {
 
 
                 novaLinha.innerText = `Item: ${item.nome} || Quantidade: ${item.quantidade}`;
+
+                if (item.quantidade < 10) {
+                    novaLinha.classList.add('estoque-critico');
+                }
 
 
 
@@ -178,21 +185,21 @@ if (typeof document !== 'undefined') {
 
     if (inputBusca) {
         inputBusca.addEventListener('input', () => {
-            
+
             const termoBusca = inputBusca.value.toLowerCase();
-            
-       
+
+
             const linhasMateriais = document.querySelectorAll('#lista-materiais li');
 
             linhasMateriais.forEach(linha => {
-               
+
                 const textoLinha = linha.innerText.toLowerCase();
 
-              
+
                 if (textoLinha.includes(termoBusca)) {
-                    linha.style.display = 'flex'; 
+                    linha.style.display = 'flex';
                 } else {
-                    linha.style.display = 'none'; 
+                    linha.style.display = 'none';
                 }
             });
         });
