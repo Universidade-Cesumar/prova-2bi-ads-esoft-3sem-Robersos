@@ -62,7 +62,7 @@ btnCadastro.addEventListener('click', async function () {
 
 
 
-function renderizarItens() {
+async function renderizarItens() {
     fetch(URL_API)
         .then(resposta => resposta.json())
         .then(itensDaAPI => {
