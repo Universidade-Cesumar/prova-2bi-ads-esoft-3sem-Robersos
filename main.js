@@ -65,7 +65,7 @@ function renderizarItens() {
         .then(itensDaAPI => {
 
             listaEstoque.innerHTML = "";
-            
+
             const totalItensElemento = document.getElementById('total-itens');
 
             if (totalItensElemento) {
@@ -172,6 +172,33 @@ function renderizarItens() {
             console.error("Erro ao buscar os dados da API:", erro);
         });
 }
+
+if (typeof document !== 'undefined') {
+    const inputBusca = document.getElementById('input-busca');
+
+    if (inputBusca) {
+        inputBusca.addEventListener('input', () => {
+            
+            const termoBusca = inputBusca.value.toLowerCase();
+            
+       
+            const linhasMateriais = document.querySelectorAll('#lista-materiais li');
+
+            linhasMateriais.forEach(linha => {
+               
+                const textoLinha = linha.innerText.toLowerCase();
+
+              
+                if (textoLinha.includes(termoBusca)) {
+                    linha.style.display = 'flex'; 
+                } else {
+                    linha.style.display = 'none'; 
+                }
+            });
+        });
+    }
+}
+
 window.onload = function () {
     renderizarItens();
 };
